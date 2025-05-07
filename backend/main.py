@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import restaurants
+from routers import restaurants, hotels
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -16,3 +16,4 @@ app.add_middleware(
 )
 
 app.include_router(restaurants.router, prefix="/api")
+app.include_router(hotels.router, prefix="/api")

@@ -27,10 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col overflow-hidden h-dvh`}
       >
         <Header />
-        <main className="py-10 px-10">{children}</main>
+        <main className="flex flex-1 overflow-hidden">{children}</main>
       </body>
     </html>
   );

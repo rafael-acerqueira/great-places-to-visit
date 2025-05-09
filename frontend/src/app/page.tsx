@@ -59,12 +59,14 @@ export default function Home() {
 
   return (
     <>
-      <section className='w-1/2 flex flex-col gap-10'>
-        {
-          places.map(place => <Card key={place.id} place={place} />)
-        }
+      <section className='w-1/3 h-full overflow-y-auto'>
+        <section className='flex flex-col items-center gap-10 py-10'>
+          {
+            places.map(place => <Card key={place.id} place={place} />)
+          }
+        </section>
       </section>
-      <section className='w-1/2'></section>
+      <section className='w-2/3'></section>
     </>
 
   );

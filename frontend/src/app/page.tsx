@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Card from '../components/Card'
 import Place from '../types/place'
+import GoogleMap from '@/components/GoogleMap';
 
 export default function Home() {
 
@@ -66,7 +67,9 @@ export default function Home() {
           }
         </section>
       </section>
-      <section className='w-2/3'></section>
+      <section className='w-2/3'>
+        <GoogleMap />
+      </section>
     </>
 
   );

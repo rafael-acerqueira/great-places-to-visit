@@ -1,9 +1,15 @@
+'use client'
+
 import Link from 'next/link'
 import Form from 'next/form'
 
 import { Search } from 'lucide-react';
+import { useLocation } from '@/contexts/LocationContext';
 
 export default function Header() {
+
+  const { setLocation } = useLocation()
+
   return (
     <header className="bg-emerald-500 h-16">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -13,7 +19,11 @@ export default function Header() {
         <div className="flex items-center justify-between w-100">
           <span>Explore new places</span>
           <Form className="relative" action="/search">
-            <input className="bg-white rounded pl-9 py-1 w-60" name="query" />
+            <input
+              type="text"
+              placeholder="City"
+              onChange={(e) => setLocation(e.target.value)}
+              className="bg-white rounded pl-9 py-1 w-60" name="query" />
             <button className="absolute left-1 top-1 cursor-pointer" type="submit"><Search /></button>
           </Form>
         </div>

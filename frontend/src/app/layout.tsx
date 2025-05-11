@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import Header from "../components/Header"
+import { LocationProvider } from "@/contexts/LocationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col overflow-hidden h-dvh`}
       >
-        <Header />
-        <main className="flex flex-1 overflow-hidden">{children}</main>
+        <LocationProvider>
+          <Header />
+          <main className="flex flex-1 overflow-hidden">{children}</main>
+        </LocationProvider>
       </body>
     </html>
   );

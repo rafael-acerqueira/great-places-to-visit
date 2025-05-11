@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import Card from '../components/Card'
 import Place from '../types/place'
 import GoogleMap from '@/components/GoogleMap';
+import { useLocation } from '@/contexts/LocationContext';
 
 export default function Home() {
 
   const [places, setPlaces] = useState<Place[]>([])
+  const { location } = useLocation()
 
 
   const fakePlaces: Place[] = [
@@ -61,6 +63,7 @@ export default function Home() {
   return (
     <>
       <section className='w-1/3 h-full overflow-y-auto'>
+        {location}
         <section className='flex flex-col items-center gap-10 py-10'>
           {
             places.map(place => <Card key={place.id} place={place} />)

@@ -8,7 +8,7 @@ import { useLocation } from '@/contexts/LocationContext';
 
 export default function Header() {
 
-  const { setLocation } = useLocation()
+  const { location, setLocation } = useLocation()
 
   return (
     <header className="bg-emerald-500 h-16">
@@ -23,6 +23,7 @@ export default function Header() {
               type="text"
               placeholder="City"
               onChange={(e) => setLocation(e.target.value)}
+              value={location}
               className="bg-white rounded pl-9 py-1 w-60" name="query" />
             <button className="absolute left-1 top-1 cursor-pointer" type="submit"><Search /></button>
           </Form>

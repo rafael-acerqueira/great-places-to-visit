@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { useLocation } from '@/contexts/LocationContext'
 
 const containerStyle = {
   width: '100%',
@@ -17,21 +18,51 @@ function MyMapComponent() {
     lng: -37.07302530353427,
   }
 
+  const getAddress = async (lat, lng) => {
+    const geocoder = new google.maps.Geocoder();
+    const latlng = new google.maps.LatLng(lat, lng);
+    try {
+      const { results } = await geocoder.geocode({ location: latlng });
+
+      if (results && results.length > 0) {
+        setLocation(results[0].formatted_address);
+      } else {
+        console.log('Address not found');
+      }
+    } catch (error) {
+      console.error('Geocoder error:', error);
+      console.log('Error fetching address');
+    }
+  }
+
   const [center, setCenter] = useState(DEFAULT_COORDS)
+  const { setLocation } = useLocation()
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const coords = position.coords
-      console.log(coords)
-      setCenter({ lat: coords.latitude, lng: coords.longitude })
-    }, (err) => {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    }, {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    });
-  }, [])
+    if (!isLoaded) return
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const coords = position.coords
+        const lat = coords.latitude
+        const lng = coords.longitude
+
+        setCenter({ lat, lng })
+        getAddress(lat, lng)
+
+      }, (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          getAddress(DEFAULT_COORDS.lat, DEFAULT_COORDS.lng)
+        } else {
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+        }
+      }, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      });
+    }
+  }, [isLoaded])
 
   return isLoaded ? (
     <GoogleMap

@@ -1,4 +1,5 @@
 import asyncio
+from aiocache import cached, Cache
 from http.client import HTTPException
 
 from fastapi import APIRouter
@@ -32,6 +33,7 @@ async def fetch_content_ids(city: str):
 
     return get_content_ids(data)
 
+@cached(ttl=600, cache=Cache.MEMORY, key_builder=lambda f, *args, **kwargs: f"restaurant:{args[0]}")
 async def fetch_restaurant_details(content_id):
     url = "https://travel-advisor.p.rapidapi.com/restaurants/v2/get-details"
     headers = {

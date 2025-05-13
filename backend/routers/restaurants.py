@@ -1,5 +1,6 @@
 import asyncio
 from aiocache import cached, Cache
+from aiolimiter import AsyncLimiter
 from http.client import HTTPException
 
 from fastapi import APIRouter
@@ -9,8 +10,9 @@ from utils.sanitize_info import get_content_ids, get_relevant_info
 import httpx
 import os
 
-
 router = APIRouter()
+
+limiter = AsyncLimiter(max_rate=5, time_period=1)
 
 async def fetch_content_ids(city: str):
     geo_id = await get_geo_id(city)

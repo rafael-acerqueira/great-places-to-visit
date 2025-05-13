@@ -14,6 +14,8 @@ router = APIRouter()
 
 limiter = AsyncLimiter(max_rate=5, time_period=1)
 
+semaphore = asyncio.Semaphore(5)
+
 async def fetch_content_ids(city: str):
     geo_id = await get_geo_id(city)
     url = "https://travel-advisor.p.rapidapi.com/restaurants/v2/list"
@@ -58,6 +60,10 @@ async def fetch_restaurant_details(content_id):
         except httpx.HTTPError as e:
             return {"content_id": content_id, "error": str(e)}
 
+async def fetch_restaurant_details_with_control(content_id: str):
+    async with semaphore:
+        return await fetch_restaurant_details(content_id)
+
 @router.get("/restaurants/{city}")
 async def get_restaurants(city: str):
     content_ids = await fetch_content_ids(city)
@@ -65,6 +71,6 @@ async def get_restaurants(city: str):
     if not content_ids:
         raise HTTPException(status_code=404, detail="No restaurant found")
 
-    tasks = [fetch_restaurant_details(content_id) for content_id in content_ids]
+    tasks = [fetch_restaurant_details_with_control(content_id) for content_id in content_ids]
     restaurants = await asyncio.gather(*tasks)
     return restaurants
